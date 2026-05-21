@@ -18,6 +18,7 @@ variable "snowflake_warehouse" {
   type = string
 }
 
-variable "snowflake_private_key_path" {
-  type = string
+variable "snowflake_private_key" {
+  type      = string
+  sensitive = true
 }
