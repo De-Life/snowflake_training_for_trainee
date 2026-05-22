@@ -2,7 +2,7 @@ name: dbt Snowflake Run
 
 on:
   push:
-    branches: [ main ] 
+    branches: [ main ]
 
 jobs:
   dbt-run:
@@ -19,18 +19,22 @@ jobs:
         with:
           python-version: '3.11'
 
-      # 3. HCP Terraformから変数を安全に一括取得する（公式Action）
-      # これにより、HCP TerraformのWorkspace内にある変数が自動的に環境変数として展開されます
+      # 3. HCP Terraformから変数を安全に一括同期する
       - name: Sync HCP Terraform Variables
         uses: hashicorp/tfe-sync-action@v1
         with:
-          token: ${{ secrets.TFC_TOKEN }} # GitHubのSecretsに登録してあるトークン名
-          workspace: "ws-J2rtbnPn3rAFi8yV" # ⚠️ 要変更：dbt用WorkspaceのID
+          token: ${{ secrets.TFC_TOKEN }}
+          workspace: "ws-J2rtbnPn3rAFi8yV"
 
       # 4. dbt-snowflakeのインストールと環境変数の設定
       - name: Install dbt and Run
+        # 実際のdbtプロジェクトがあるディレクトリを指定
+        working-directory: ./dbt/mydbt
         env:
-          DBT_ENV_SECRET_PRIVATE_KEY: ${{ env.dbt_snowflake_private_key }}
+          # HCP Terraformで「Sensitive（秘匿）」として登録されている変数は、
+          # 同期実行によって GitHubの "Secrets" 側に自動作成されます。
+          # そのため「secrets.変数名」の構文で呼び出す必要があります。
+          DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.dbt_snowflake_private_key }}
         run: |
           pip install --no-cache-dir dbt-snowflake
           dbt debug --profiles-dir .
