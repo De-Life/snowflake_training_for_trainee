@@ -1,14 +1,14 @@
 mydbt:
+  target: dev
   outputs:
-    target_env:
-    type: snowflake
-    account: "{{ env_var('DBT_ENV_SECRET_ACCOUNT') }}"
-    user: "{{ env_var('DBT_ENV_SECRET_USER') }}"
-    role: "{{ env_var('DBT_ENV_SECRET_ROLE') }}"
-    warehouse: "{{ env_var('DBT_ENV_SECRET_WAREHOUSE') }}"
-    database: "{{ env_var('DBT_ENV_SECRET_DATABASE') }}"
-    schema: "{{ env_var('DBT_ENV_SECRET_SCHEMA') }}"
-    threads: 1
-    authenticator: keypair
-    private_key_pem: "{{ env_var('DBT_ENV_SECRET_PRIVATE_KEY') }}"
-  target: target_env
+    dev:
+      type: snowflake
+      account: "{{ env_var('DBT_ENV_SECRET_ACCOUNT') }}"
+      user: "{{ env_var('DBT_ENV_SECRET_USER') }}"
+      role: "{{ env_var('DBT_ENV_SECRET_ROLE') }}"
+      warehouse: "{{ env_var('DBT_ENV_SECRET_WAREHOUSE') }}"
+      database: "{{ env_var('DBT_ENV_SECRET_DATABASE') }}"
+      schema: "{{ env_var('DBT_ENV_SECRET_SCHEMA') }}"
+      threads: 4
+      authenticator: keypair
+      private_key_pem: "{{ env_var('DBT_ENV_SECRET_PRIVATE_KEY') }}"
