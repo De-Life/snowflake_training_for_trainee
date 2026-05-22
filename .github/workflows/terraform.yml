@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TF_TOKEN_app_terraform_io: ${{ secrets.TF_API_TOKEN }}
+      TF_TOKEN_app_terraform_io: ${{ secrets.HCP_API_TOKEN }}
 
     steps:
       - name: Checkout
