@@ -1,0 +1,37 @@
+name: dbt Snowflake Run
+
+on:
+  push:
+    branches: [ main ] 
+
+jobs:
+  dbt-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. GitHubリポジトリのコードをチェックアウト
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Python環境のセットアップ
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. HCP Terraformから変数を安全に一括取得する（公式Action）
+      # これにより、HCP TerraformのWorkspace内にある変数が自動的に環境変数として展開されます
+      - name: Sync HCP Terraform Variables
+        uses: hashicorp/tfe-sync-action@v1
+        with:
+          token: ${{ secrets.TFC_TOKEN }} # GitHubのSecretsに登録してあるトークン名
+          workspace: "ws-J2rtbnPn3rAFi8yV" # ⚠️ 要変更：dbt用WorkspaceのID
+
+      # 4. dbt-snowflakeのインストールと環境変数の設定
+      - name: Install dbt and Run
+        env:
+          DBT_ENV_SECRET_PRIVATE_KEY: ${{ env.dbt_snowflake_private_key }}
+        run: |
+          pip install --no-cache-dir dbt-snowflake
+          dbt debug --profiles-dir .
+          dbt run --profiles-dir .
