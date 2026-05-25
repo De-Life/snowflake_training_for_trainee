@@ -32,7 +32,15 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   mydbt:
     # Config indicated by + and applies to all files under models/example/
-    example:
+    mymodel:
       +materialized: view
 
-#Test3
+seeds:
+  mydbt:
+    +schema: TF_TEST_SCHEMA
+    +column_types:
+      employee_id: integer
+      name: varchar
+      department: varchar
+      email: varchar
+
