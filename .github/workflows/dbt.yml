@@ -1,6 +1,8 @@
 name: dbt Snowflake Run
 
 on:
+  pull_request:
+    branches: [ main ]
   push:
     branches: [ main ]
   workflow_dispatch:
@@ -26,16 +28,19 @@ jobs:
             "https://app.terraform.io/api/v2/workspaces/ws-wSwSw3TQ4Ni93Rjv/vars" \
             | python3 src/fetch_tfc_vars.py >> $GITHUB_ENV
 
-      - name: Debug variables
-        run: |
-          echo "=== GITHUB_ENV contents ==="
-          cat $GITHUB_ENV
-
       - name: Install dbt and Run
         working-directory: ./dbt/mydbt
         env:
           DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
         run: |
+          # Bashで記述
           pip install --no-cache-dir dbt-snowflake
           dbt debug --profiles-dir .
+          dbt seed --profiles-dir .
           dbt run --profiles-dir .
+          # トリガーがPRの時はcompile、mainマージ時はrunを実行
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            dbt compile --profiles-dir .
+          else
+            dbt run --profiles-dir .
+          fi
