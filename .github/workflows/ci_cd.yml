@@ -67,13 +67,12 @@ jobs:
         working-directory: ./dbt/mydbt
         env:
           DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
-        run: |
-          # Bashで記述
+        run: | # Bashで記述
           pip install --no-cache-dir dbt-snowflake
-          dbt debug --profiles-dir .
-          # トリガーがPRの時はcompile、mainマージ時はrunを実行
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             dbt compile --profiles-dir .
           else
+            dbt debug --profiles-dir .
+            dbt seed --profiles-dir .
             dbt run --profiles-dir .
           fi
