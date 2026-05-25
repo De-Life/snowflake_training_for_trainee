@@ -37,7 +37,6 @@ models:
 
 seeds:
   mydbt:
-    +schema: TF_TEST_SCHEMA
     +column_types:
       employee_id: integer
       name: varchar
