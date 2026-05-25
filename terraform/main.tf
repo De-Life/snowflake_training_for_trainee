@@ -34,6 +34,6 @@ provider "snowflake" {
 # 3. 作成するリソース（データベース）の定義
 # ==========================================
 resource "snowflake_database" "tf_test_db" {
-  name    = "TF_TEST_DB2" # データベース名
+  name    = "TF_TEST_DB" # データベース名
   comment = "Test DB created by Terraform"
 }
