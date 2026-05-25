@@ -4,4 +4,4 @@ SELECT
     department,
     email
 FROM TF_TEST_DB.TF_TEST_SCHEMA.EMPLOYEES
-ORDER BY department, employee_id;
+ORDER BY department, employee_id
