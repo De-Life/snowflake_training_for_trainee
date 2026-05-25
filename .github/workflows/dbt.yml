@@ -44,7 +44,7 @@ jobs:
         working-directory: ./dbt/mydbt
         env:
           DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
-        run: 
+        run: |
           pip install --no-cache-dir dbt-snowflake
           dbt debug --profiles-dir .
           dbt run --profiles-dir .
