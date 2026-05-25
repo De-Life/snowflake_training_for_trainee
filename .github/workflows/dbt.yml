@@ -28,8 +28,7 @@ jobs:
 
           # 各変数をGITHUB_ENVに書き出す
           # ※ Sensitiveな変数はAPIレスポンスでvalue=""になるため別途対応（後述）
-          echo "$RESPONSE" | \
-            python3 -c "
+          echo "$RESPONSE" | python3 << 'EOF' >> $GITHUB_ENV
           import sys, json
           data = json.load(sys.stdin)
           for var in data['data']:
