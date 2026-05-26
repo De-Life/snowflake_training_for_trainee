@@ -22,3 +22,7 @@ variable "snowflake_private_key" {
   type      = string
   sensitive = true
 }
+
+variable "trainee_name" {
+  type        = string
+}
