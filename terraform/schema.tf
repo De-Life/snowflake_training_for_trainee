@@ -1,25 +1,80 @@
+# ==========================================
+# スキーマ定義（SYSADMINで実行）
+# ==========================================
 # スキーマの作成
-resource "snowflake_schema" "tf_test_schema" {
-  database = snowflake_database.tf_test_db.name
-  name     = "TF_TEST_SCHEMA"
-  comment  = "Test schema created by Terraform"
+resource "snowflake_schema" "training_raw" {
+  database = snowflake_database.training_db.name
+  name     = "RAW"
+  comment  = "Raw mail data ingested from S3."
+}
+resource "snowflake_schema" "training_normalized" {
+  database = snowflake_database.training_db.name
+  name     = "NORMALIZED"
+  comment  = "Processed data for Streamlit."
 }
 
-# スキーマへのUSAGE権限
-resource "snowflake_grant_privileges_to_account_role" "schema_usage" {
+# ==========================================
+# スキーマへの権限付与
+# ==========================================
+# RAW・NORMALIZEDスキーマ
+resource "snowflake_grant_privileges_to_account_role" "training_schema_grants" {
+  for_each = toset([
+    "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}",
+    "${snowflake_database.training_db.name}.${snowflake_schema.training_normalized.name}"
+  ])
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
-  privileges        = ["USAGE", "CREATE TABLE", "CREATE VIEW"]
+  privileges = [
+    "USAGE",
+    "MODIFY",
+    "MONITOR",
+    "CREATE TABLE",
+    "CREATE STAGE",
+    "CREATE PIPE",
+    "CREATE TASK",
+    "CREATE FILE FORMAT",
+    "CREATE STREAM",
+    "CREATE VIEW",
+    "CREATE PROCEDURE",
+    "CREATE STREAMLIT"
+  ]
   on_schema {
-    schema_name = "${snowflake_database.tf_test_db.name}.${snowflake_schema.tf_test_schema.name}"
+    schema_name = each.value
   }
-  depends_on = [snowflake_schema.tf_test_schema]
+  depends_on = [
+    snowflake_schema.training_raw,
+    snowflake_schema.training_normalized
+  ]
+}
+# FUTUREスキーマ
+resource "snowflake_grant_privileges_to_account_role" "future_schema_training" {
+  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  privileges = [
+    "USAGE",
+    "MODIFY",
+    "MONITOR",
+    "CREATE TABLE",
+    "CREATE STAGE",
+    "CREATE PIPE",
+    "CREATE TASK",
+    "CREATE FILE FORMAT",
+    "CREATE STREAM",
+    "CREATE VIEW",
+    "CREATE PROCEDURE",
+    "CREATE STREAMLIT"
+  ]
+  on_schema {
+    future_schemas_in_database = snowflake_database.training_db.name
+  }
 }
 
-# 将来作成されるスキーマへの権限付与
-resource "snowflake_grant_privileges_to_account_role" "future_schema_usage" {
+# ==========================================
+# WAREHOUSEへの権限付与
+# ==========================================
+resource "snowflake_grant_privileges_to_account_role" "training_wh_usage" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
-  privileges        = ["USAGE", "CREATE TABLE", "CREATE VIEW"]
-  on_schema {
-    future_schemas_in_database = snowflake_database.tf_test_db.name
+  privileges        = ["USAGE"]
+  on_account_object {
+    object_type = "WAREHOUSE"
+    object_name = "SNOWFLAKE_LEARNING_WH"
   }
 }

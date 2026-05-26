@@ -31,33 +31,30 @@ provider "snowflake" {
 }
 
 # ==========================================
-# 3. 作成するリソース（データベース）の定義
+# 3. DB定義（SYSADMINで実行）
 # ==========================================
-resource "snowflake_database" "tf_test_db" {
-  name    = "TF_TEST_DB" # データベース名
-  comment = "Test DB created by Terraform"
+resource "snowflake_database" "training_db" {
+  name    = "${upper(var.trainee_name)}_TRAINING_DB"
+  comment = "Training DB for ${var.trainee_name}. Created by Terraform."
 }
 
 # ==========================================
 # 4. DBT用ロールへの権限付与
 # ==========================================
 
-# データベースへのUSAGE権限
-resource "snowflake_grant_privileges_to_account_role" "db_usage" {
+# DBへのUSAGE権限
+resource "snowflake_grant_privileges_to_account_role" "training_db_usage" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
   privileges        = ["USAGE"]
   on_account_object {
     object_type = "DATABASE"
-    object_name = snowflake_database.tf_test_db.name
+    object_name = snowflake_database.training_db.name
   }
 }
 
-# スキーマ作成権限
-resource "snowflake_grant_privileges_to_account_role" "db_create_schema" {
+# タスク実行権限
+resource "snowflake_grant_privileges_to_account_role" "execute_task" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
-  privileges        = ["CREATE SCHEMA"]
-  on_account_object {
-    object_type = "DATABASE"
-    object_name = snowflake_database.tf_test_db.name
-  }
+  privileges        = ["EXECUTE TASK"]
+  on_account = true
 }
