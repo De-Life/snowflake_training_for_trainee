@@ -24,5 +24,5 @@ variable "snowflake_private_key" {
 }
 
 variable "trainee_name" {
-  type        = string
+  type = string
 }

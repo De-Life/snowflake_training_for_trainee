@@ -56,5 +56,5 @@ resource "snowflake_grant_privileges_to_account_role" "training_db_usage" {
 resource "snowflake_grant_privileges_to_account_role" "execute_task" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
   privileges        = ["EXECUTE TASK"]
-  on_account = true
+  on_account        = true
 }
