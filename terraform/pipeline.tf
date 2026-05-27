@@ -2,26 +2,26 @@
 # Storage Integration定義
 # ==========================================
 resource "snowflake_storage_integration" "s3_int" {
-  name    = "S3_INT"
-  type    = "EXTERNAL_STAGE"
-  enabled = true
-  storage_provider     = "S3"
-  storage_aws_role_arn = "arn:aws:iam::160621358952:role/snowflake_demo_role"
+  name                      = "S3_INT"
+  type                      = "EXTERNAL_STAGE"
+  enabled                   = true
+  storage_provider          = "S3"
+  storage_aws_role_arn      = "arn:aws:iam::160621358952:role/snowflake_demo_role"
   storage_allowed_locations = ["s3://anchor-demo-mybucket/messages/"]
-  comment = "Storage integration for S3 mail data."
+  comment                   = "Storage integration for S3 mail data."
 }
 
 # ==========================================
 # File Format定義
 # ==========================================
 resource "snowflake_file_format" "mail_jsonl_format" {
-  database         = snowflake_database.training_db.name
-  schema           = snowflake_schema.training_raw.name
-  name             = "MAIL_JSONL_FORMAT"
-  format_type      = "JSON"
-  strip_outer_array = false
+  database           = snowflake_database.training_db.name
+  schema             = snowflake_schema.training_raw.name
+  name               = "MAIL_JSONL_FORMAT"
+  format_type        = "JSON"
+  strip_outer_array  = false
   ignore_utf8_errors = true
-  comment          = "File format for mail JSONL files."
+  comment            = "File format for mail JSONL files."
 
   depends_on = [snowflake_schema.training_raw]
 }
@@ -75,8 +75,8 @@ resource "snowflake_table" "mails_raw" {
     type = "VARCHAR"
   }
   column {
-    name     = "HAS_ATTACHMENTS"
-    type     = "BOOLEAN"
+    name = "HAS_ATTACHMENTS"
+    type = "BOOLEAN"
   }
   column {
     name = "ATTACHMENTS"
@@ -87,8 +87,8 @@ resource "snowflake_table" "mails_raw" {
     type = "VARIANT"
   }
   column {
-    name     = "AI_PROCESSED"
-    type     = "BOOLEAN"
+    name = "AI_PROCESSED"
+    type = "BOOLEAN"
   }
   column {
     name = "AI_RESULT"
