@@ -81,6 +81,7 @@ jobs:
         working-directory: ./dbt/mydbt
         env:
           DBT_ENV_SECRET_PRIVATE_KEY: ${{ secrets.DBT_ENV_SECRET_PRIVATE_KEY }}
+          DBT_DATABASE: ${{ env.DBT_ENV_SECRET_DATABASE }}
         run: | # Bashで記述
           pip install --no-cache-dir dbt-snowflake
           if [ "${{ github.event_name }}" = "pull_request" ]; then
