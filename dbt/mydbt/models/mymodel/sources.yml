@@ -6,3 +6,4 @@ sources:
     schema: RAW
     tables:
       - name: MAILS_RAW
+      - name: ST_S3_MAIL
