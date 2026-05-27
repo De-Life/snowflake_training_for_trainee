@@ -66,6 +66,7 @@ jobs:
       - name: Terraform Output
         working-directory: terraform
         run: |
+          terraform init
           DB_NAME=$(terraform output -raw training_db_name)
           echo "DBT_DATABASE=$DB_NAME" >> $GITHUB_ENV
 
