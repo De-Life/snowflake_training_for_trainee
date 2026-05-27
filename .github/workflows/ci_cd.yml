@@ -70,6 +70,8 @@ jobs:
 
       - name: Terraform Output
         working-directory: terraform
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.HCP_API_TOKEN }}
         run: |
           terraform init
           DB_NAME=$(terraform output -raw training_db_name)
