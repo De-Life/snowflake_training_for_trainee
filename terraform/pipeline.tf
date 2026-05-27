@@ -225,3 +225,13 @@ resource "snowflake_grant_privileges_to_account_role" "future_file_format_usage"
     }
   }
 }
+
+resource "snowflake_grant_privileges_to_account_role" "mails_raw_grants" {
+  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE"]
+  on_schema_object {
+    object_type = "TABLE"
+    object_name = "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.MAILS_RAW"
+  }
+  depends_on = [snowflake_table.mails_raw]
+}
