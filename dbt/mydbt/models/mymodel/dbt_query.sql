@@ -3,5 +3,5 @@ SELECT
     name,
     department,
     email
-FROM {{ ref('EMPLOYEES') }}
+FROM {{ ref('employees') }}
 ORDER BY department, employee_id
