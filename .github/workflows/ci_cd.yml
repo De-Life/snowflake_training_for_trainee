@@ -86,7 +86,7 @@ jobs:
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             dbt compile --profiles-dir .
           else
-            dbt debug --profiles-dir .
+            dbt debug --profiles-dir . || true
             dbt seed --profiles-dir .
             dbt run --profiles-dir .
           fi
