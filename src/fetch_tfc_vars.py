@@ -7,3 +7,5 @@ for var in data['data']:
     sensitive = var['attributes']['sensitive']
     if not sensitive:
         print(f'{key}={value}')
+        if key == 'DBT_ENV_SECRET_DATABASE':
+            print(f'DBT_DATABASE={value}')
