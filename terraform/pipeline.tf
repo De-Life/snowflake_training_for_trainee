@@ -157,11 +157,24 @@ resource "snowflake_pipe" "pipe_s3_to_mails_raw" {
 }
 
 # ==========================================
-# MAILS_RAWテーブル権限付与
+# 権限付与
 # ==========================================
-resource "snowflake_grant_privileges_to_account_role" "mails_raw_select" {
+
+# Storage IntegrationへのUSAGE権限（追加）
+resource "snowflake_grant_privileges_to_account_role" "s3_int_usage" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
-  privileges        = ["SELECT"]
+  privileges        = ["USAGE"]
+  on_account_object {
+    object_type = "INTEGRATION"
+    object_name = snowflake_storage_integration.s3_int.name
+  }
+  depends_on = [snowflake_storage_integration.s3_int]
+}
+
+# MAILS_RAWテーブルへの権限（重複削除・一本化）
+resource "snowflake_grant_privileges_to_account_role" "mails_raw_grants" {
+  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE"]
   on_schema_object {
     object_type = "TABLE"
     object_name = "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.MAILS_RAW"
@@ -169,7 +182,8 @@ resource "snowflake_grant_privileges_to_account_role" "mails_raw_select" {
   depends_on = [snowflake_table.mails_raw]
 }
 
-resource "snowflake_grant_privileges_to_account_role" "future_table_select" {
+# 将来作成されるテーブルへの権限
+resource "snowflake_grant_privileges_to_account_role" "future_table_grants" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
   privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
   on_schema_object {
@@ -180,7 +194,7 @@ resource "snowflake_grant_privileges_to_account_role" "future_table_select" {
   }
 }
 
-# ST_S3_MAILステージへのUSAGE権限
+# ST_S3_MAILステージへの権限
 resource "snowflake_grant_privileges_to_account_role" "stage_usage" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
   privileges        = ["USAGE", "READ"]
@@ -191,7 +205,7 @@ resource "snowflake_grant_privileges_to_account_role" "stage_usage" {
   depends_on = [snowflake_stage.st_s3_mail]
 }
 
-# 将来作成されるステージへも自動付与
+# 将来作成されるステージへの権限
 resource "snowflake_grant_privileges_to_account_role" "future_stage_usage" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
   privileges        = ["USAGE", "READ"]
@@ -203,7 +217,7 @@ resource "snowflake_grant_privileges_to_account_role" "future_stage_usage" {
   }
 }
 
-# MAIL_JSONL_FORMATへのUSAGE権限
+# MAIL_JSONL_FORMATへの権限
 resource "snowflake_grant_privileges_to_account_role" "file_format_usage" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
   privileges        = ["USAGE"]
@@ -214,7 +228,7 @@ resource "snowflake_grant_privileges_to_account_role" "file_format_usage" {
   depends_on = [snowflake_file_format.mail_jsonl_format]
 }
 
-# 将来作成されるFILE FORMATへも自動付与
+# 将来作成されるFILE FORMATへの権限
 resource "snowflake_grant_privileges_to_account_role" "future_file_format_usage" {
   account_role_name = "FR_ANCHOR_DEMO_ROLE"
   privileges        = ["USAGE"]
@@ -224,14 +238,4 @@ resource "snowflake_grant_privileges_to_account_role" "future_file_format_usage"
       in_schema          = "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}"
     }
   }
-}
-
-resource "snowflake_grant_privileges_to_account_role" "mails_raw_grants" {
-  account_role_name = "FR_ANCHOR_DEMO_ROLE"
-  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE"]
-  on_schema_object {
-    object_type = "TABLE"
-    object_name = "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.MAILS_RAW"
-  }
-  depends_on = [snowflake_table.mails_raw]
 }
