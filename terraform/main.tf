@@ -52,9 +52,20 @@ resource "snowflake_grant_privileges_to_account_role" "training_db_usage" {
   }
 }
 
-# タスク実行権限
-resource "snowflake_grant_privileges_to_account_role" "execute_task" {
-  account_role_name = "FR_ANCHOR_DEMO_ROLE"
-  privileges        = ["EXECUTE TASK"]
-  on_account        = true
+# ==========================================
+# 5. stateファイルからリソースを削除
+# ==========================================
+
+removed {
+  from = snowflake_grant_privileges_to_account_role.db_usage
+  lifecycle {
+    destroy = false
+  }
+}
+
+removed {
+  from = snowflake_grant_privileges_to_account_role.db_create_schema
+  lifecycle {
+    destroy = false
+  }
 }
