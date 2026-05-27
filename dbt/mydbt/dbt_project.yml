@@ -37,6 +37,7 @@ models:
 
 seeds:
   mydbt:
+    +schema: RAW
     +column_types:
       employee_id: integer
       name: varchar
