@@ -202,3 +202,26 @@ resource "snowflake_grant_privileges_to_account_role" "future_stage_usage" {
     }
   }
 }
+
+# MAIL_JSONL_FORMATへのUSAGE権限
+resource "snowflake_grant_privileges_to_account_role" "file_format_usage" {
+  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  privileges        = ["USAGE"]
+  on_schema_object {
+    object_type = "FILE FORMAT"
+    object_name = "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.MAIL_JSONL_FORMAT"
+  }
+  depends_on = [snowflake_file_format.mail_jsonl_format]
+}
+
+# 将来作成されるFILE FORMATへも自動付与
+resource "snowflake_grant_privileges_to_account_role" "future_file_format_usage" {
+  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  privileges        = ["USAGE"]
+  on_schema_object {
+    future {
+      object_type_plural = "FILE FORMATS"
+      in_schema          = "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}"
+    }
+  }
+}
