@@ -69,3 +69,17 @@ removed {
     destroy = false
   }
 }
+
+removed {
+  from = snowflake_grant_privileges_to_account_role.schema_usage
+  lifecycle {
+    destroy = false
+  }
+}
+
+removed {
+  from = snowflake_grant_privileges_to_account_role.future_schema_usage
+  lifecycle {
+    destroy = false
+  }
+}
