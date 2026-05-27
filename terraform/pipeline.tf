@@ -155,3 +155,27 @@ resource "snowflake_pipe" "pipe_s3_to_mails_raw" {
     snowflake_stage.st_s3_mail
   ]
 }
+
+# ==========================================
+# MAILS_RAWテーブル権限付与
+# ==========================================
+resource "snowflake_grant_privileges_to_account_role" "mails_raw_select" {
+  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  privileges        = ["SELECT"]
+  on_schema_object {
+    object_type = "TABLE"
+    object_name = "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.MAILS_RAW"
+  }
+  depends_on = [snowflake_table.mails_raw]
+}
+
+resource "snowflake_grant_privileges_to_account_role" "future_table_select" {
+  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  on_schema_object {
+    future {
+      object_type_plural = "TABLES"
+      in_schema          = "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}"
+    }
+  }
+}
