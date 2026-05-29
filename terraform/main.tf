@@ -5,7 +5,7 @@ terraform {
   cloud {
     organization = "snowflake-training"
     workspaces {
-      name = "snowflake-workspace"
+      tags = ["training"]
     }
   }
 
