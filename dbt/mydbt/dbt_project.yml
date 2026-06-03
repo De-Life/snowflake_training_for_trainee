@@ -17,4 +17,13 @@ clean-targets:
 models:
   mydbt:
     mymodel:
-      +materialized: view
+      +materialized: table
+      +schema: NORMALIZED
+
+seeds:
+  mydbt:
+    classify_text_labels:
+      +schema: NORMALIZED
+      +column_types:
+        LABEL: varchar
+        DESCRIPTION: varchar
