@@ -1,12 +1,12 @@
 # ==========================================
 # スキーマ定義（SYSADMINで実行）
 # ==========================================
-# スキーマの作成
 resource "snowflake_schema" "training_raw" {
   database = snowflake_database.training_db.name
   name     = "RAW"
   comment  = "Raw mail data ingested from S3."
 }
+
 resource "snowflake_schema" "training_normalized" {
   database = snowflake_database.training_db.name
   name     = "NORMALIZED"
@@ -16,13 +16,12 @@ resource "snowflake_schema" "training_normalized" {
 # ==========================================
 # スキーマへの権限付与
 # ==========================================
-# RAW・NORMALIZEDスキーマ
 resource "snowflake_grant_privileges_to_account_role" "training_schema_grants" {
   for_each = toset([
     "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}",
     "${snowflake_database.training_db.name}.${snowflake_schema.training_normalized.name}"
   ])
-  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  account_role_name = var.snowflake_role_name
   privileges = [
     "USAGE",
     "MODIFY",
@@ -45,9 +44,9 @@ resource "snowflake_grant_privileges_to_account_role" "training_schema_grants" {
     snowflake_schema.training_normalized
   ]
 }
-# FUTUREスキーマ
+
 resource "snowflake_grant_privileges_to_account_role" "future_schema_training" {
-  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  account_role_name = var.snowflake_role_name
   privileges = [
     "USAGE",
     "MODIFY",
@@ -67,11 +66,8 @@ resource "snowflake_grant_privileges_to_account_role" "future_schema_training" {
   }
 }
 
-# ==========================================
-# WAREHOUSEへの権限付与
-# ==========================================
 resource "snowflake_grant_privileges_to_account_role" "training_wh_usage" {
-  account_role_name = "FR_ANCHOR_DEMO_ROLE"
+  account_role_name = var.snowflake_role_name
   privileges        = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"

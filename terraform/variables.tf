@@ -26,3 +26,15 @@ variable "snowflake_private_key" {
 variable "trainee_name" {
   type = string
 }
+
+variable "s3_bucket_url" {
+  type = string
+}
+
+variable "snowflake_aws_role_arn" {
+  type = string
+}
+
+variable "snowflake_role_name" {
+  type = string
+}
