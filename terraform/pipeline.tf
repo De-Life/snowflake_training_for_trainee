@@ -22,8 +22,6 @@ resource "snowflake_file_format" "mail_jsonl_format" {
   strip_outer_array  = false
   ignore_utf8_errors = true
   comment            = "File format for mail JSONL files."
-
-  depends_on = [snowflake_schema.training_raw]
 }
 
 # ==========================================
@@ -39,7 +37,6 @@ resource "snowflake_stage" "st_s3_mail" {
   comment             = "External stage for mail data from S3."
 
   depends_on = [
-    snowflake_schema.training_raw,
     snowflake_file_format.mail_jsonl_format,
     snowflake_storage_integration.s3_int
   ]
@@ -134,8 +131,6 @@ resource "snowflake_table" "mails_raw" {
     name = "REFERAL_COMPANY"
     type = "VARCHAR"
   }
-
-  depends_on = [snowflake_schema.training_raw]
 }
 
 # ==========================================
@@ -166,7 +161,6 @@ resource "snowflake_grant_privileges_to_account_role" "s3_int_usage" {
     object_type = "INTEGRATION"
     object_name = snowflake_storage_integration.s3_int.name
   }
-  depends_on = [snowflake_storage_integration.s3_int]
 }
 
 resource "snowflake_grant_privileges_to_account_role" "mails_raw_grants" {
