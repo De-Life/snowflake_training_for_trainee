@@ -129,28 +129,6 @@ resource "snowflake_table" "mails_raw" {
 }
 
 # ==========================================
-# CLASSIFY_TEXT_LABELSテーブル定義
-# ==========================================
-resource "snowflake_table" "classify_text_labels" {
-  database = snowflake_database.training_db.name
-  schema   = snowflake_schema.training_normalized.name
-  name     = "CLASSIFY_TEXT_LABELS"
-  comment  = "Label master for SNOWFLAKE.CORTEX.CLASSIFY_TEXT()."
-
-  column {
-    name     = "LABEL"
-    type     = "VARCHAR"
-    nullable = false
-  }
-  column {
-    name = "DESCRIPTION"
-    type = "VARCHAR"
-  }
-
-  depends_on = [snowflake_schema.training_normalized]
-}
-
-# ==========================================
 # Snowpipe定義
 # ==========================================
 resource "snowflake_pipe" "pipe_s3_to_mails_raw" {
