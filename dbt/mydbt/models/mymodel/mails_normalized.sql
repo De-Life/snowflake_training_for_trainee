@@ -8,24 +8,34 @@ WITH labels AS (
     FROM {{ this.database }}.NORMALIZED.CLASSIFY_TEXT_LABELS
 ),
 
+trimmed AS (
+    SELECT
+        MESSAGE_ID,
+        SUBJECT,
+        FROM_EMAIL,
+        RECEIVED_AT,
+        LEFT(BODY_TEXT, 8000) AS body_trimmed
+    FROM {{ source('raw', 'MAILS_RAW') }}
+),
+
 ai_processed AS (
     SELECT
-        raw.MESSAGE_ID,
-        raw.SUBJECT,
-        raw.FROM_EMAIL,
-        raw.RECEIVED_AT,
-        SNOWFLAKE.CORTEX.SUMMARIZE(raw.BODY_TEXT) AS summary,
-        SNOWFLAKE.CORTEX.CLASSIFY_TEXT(raw.BODY_TEXT, labels.label_array) AS classify_result,
-        SNOWFLAKE.CORTEX.SENTIMENT(raw.BODY_TEXT) AS sentiment_score,
+        t.MESSAGE_ID,
+        t.SUBJECT,
+        t.FROM_EMAIL,
+        t.RECEIVED_AT,
+        SNOWFLAKE.CORTEX.SUMMARIZE(t.body_trimmed) AS summary,
+        SNOWFLAKE.CORTEX.CLASSIFY_TEXT(t.body_trimmed, l.label_array) AS classify_result,
+        SNOWFLAKE.CORTEX.SENTIMENT(t.body_trimmed) AS sentiment_score,
         SNOWFLAKE.CORTEX.COMPLETE(
             'mistral-large',
             CONCAT(
                 'Extract 3-5 important keywords from the following email body. Return only a JSON array of strings. Body: ',
-                raw.BODY_TEXT
+                t.body_trimmed
             )
         ) AS keywords
-    FROM {{ source('raw', 'MAILS_RAW') }} AS raw
-    CROSS JOIN labels
+    FROM trimmed AS t
+    CROSS JOIN labels AS l
 )
 
 SELECT
