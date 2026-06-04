@@ -90,6 +90,7 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             dbt debug --profiles-dir . || true
             dbt run-operation load_mails_raw --profiles-dir .
+            dbt seed --profiles-dir . 
             dbt run --profiles-dir .
           else
             dbt compile --profiles-dir .

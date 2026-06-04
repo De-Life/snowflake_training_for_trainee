@@ -185,12 +185,16 @@ resource "snowflake_grant_privileges_to_account_role" "mails_raw_grants" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "future_table_grants" {
+  for_each = toset([
+    snowflake_schema.training_raw.name,
+    snowflake_schema.training_normalized.name
+  ])
   account_role_name = var.snowflake_role_name
-  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
+  privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE", "TRUNCATE"]
   on_schema_object {
     future {
       object_type_plural = "TABLES"
-      in_schema          = "${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}"
+      in_schema          = "${snowflake_database.training_db.name}.${each.value}"
     }
   }
 }
