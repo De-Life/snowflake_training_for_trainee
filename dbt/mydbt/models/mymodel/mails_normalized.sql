@@ -14,7 +14,7 @@ trimmed AS (
         SUBJECT,
         FROM_EMAIL,
         RECEIVED_AT,
-        LEFT(BODY_TEXT, 8000) AS body_trimmed
+        LEFT(BODY_TEXT, 2000) AS body_trimmed
     FROM {{ source('raw', 'MAILS_RAW') }}
 ),
 
