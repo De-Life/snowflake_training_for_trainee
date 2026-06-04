@@ -4,7 +4,6 @@
         COPY INTO {{ db }}.RAW.MAILS_RAW
         FROM @{{ db }}.RAW.ST_S3_MAIL
         MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE
-        FORCE = TRUE
     {% endset %}
 
     {{ log("Executing: " ~ copy_sql, info=True) }}
