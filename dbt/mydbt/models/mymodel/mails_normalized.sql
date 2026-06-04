@@ -30,11 +30,11 @@ ai_processed AS (
         t.FROM_EMAIL,
         t.RECEIVED_AT,
         SNOWFLAKE.CORTEX.SUMMARIZE(t.body_trimmed) AS summary,
-        SPLIT_PART(
+        TRIM(SPLIT_PART(
             SNOWFLAKE.CORTEX.CLASSIFY_TEXT(t.body_trimmed, l.label_array):label::VARCHAR,
             ':',
             1
-        ) AS AI_CATEGORY,
+        )) AS category_raw,        ← 中間列として保持
         SNOWFLAKE.CORTEX.SENTIMENT(t.body_trimmed) AS sentiment_score,
         SNOWFLAKE.CORTEX.COMPLETE(
             'mistral-large',
@@ -57,7 +57,7 @@ SELECT
     RECEIVED_AT,
     TRUE AS AI_PROCESSED,
     summary AS AI_SUMMARY,
-    AI_CATEGORY,
+    CASE WHEN category_raw = 'UNCLASSIFIED' THEN 'その他' ELSE category_raw END AS AI_CATEGORY,
     CASE
         WHEN sentiment_score > 0.3 THEN 'positive'
         WHEN sentiment_score < -0.3 THEN 'negative'
@@ -66,7 +66,7 @@ SELECT
     keywords AS AI_KEYWORDS,
     OBJECT_CONSTRUCT(
         'summary', summary,
-        'category', AI_CATEGORY,
+        'category', CASE WHEN category_raw = 'UNCLASSIFIED' THEN 'その他' ELSE category_raw END,
         'sentiment_score', sentiment_score,
         'keywords', keywords
     ) AS AI_RAW_RESULT,
