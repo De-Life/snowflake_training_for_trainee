@@ -14,7 +14,10 @@ trimmed AS (
         SUBJECT,
         FROM_EMAIL,
         RECEIVED_AT,
-        LEFT(BODY_TEXT, 2000) AS body_trimmed
+        LEFT(
+            REGEXP_REPLACE(BODY_TEXT, '<[^>]+>', ''),  -- HTMLタグを除去
+            4000
+        ) AS body_trimmed
     FROM {{ source('raw', 'MAILS_RAW') }}
 ),
 
