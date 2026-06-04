@@ -185,7 +185,7 @@ resource "snowflake_grant_privileges_to_account_role" "mails_raw_grants" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "future_table_grants" {
-  for_each          = toset([
+  for_each = toset([
     snowflake_schema.training_raw.name,
     snowflake_schema.training_normalized.name
   ])
