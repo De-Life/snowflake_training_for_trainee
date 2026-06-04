@@ -27,3 +27,4 @@ seeds:
       +column_types:
         LABEL: varchar
         DESCRIPTION: varchar
+        SORT_ORDER: integer
