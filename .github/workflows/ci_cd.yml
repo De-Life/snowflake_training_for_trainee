@@ -4,14 +4,14 @@ on:
   push:
     branches:
       - develop
-      - feature*
+      - # TODO: あなたの作業ブランチを追加してください
   workflow_dispatch:
 
 jobs:
   terraform:
     name: Terraform
     runs-on: ubuntu-latest
-    environment: ${{ github.actor }}
+    environment: # TODO: GitHubの環境名を動的に参照してください
     env:
       TF_TOKEN_app_terraform_io: ${{ secrets.HCP_API_TOKEN }}
       TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
@@ -24,7 +24,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        working-directory: terraform
+        working-directory: # TODO: Terraformファイル（.tf）が置かれているディレクトリを指定してください
         run: terraform init
 
       - name: Terraform Format Check
@@ -43,7 +43,7 @@ jobs:
   dbt:
     name: dbt
     runs-on: ubuntu-latest
-    environment: ${{ github.actor }}
+    environment: # TODO: GitHubの環境名を動的に参照してください
     needs: terraform
     if: |
       success() ||
@@ -90,7 +90,6 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             dbt debug --profiles-dir . || true
             dbt run-operation load_mails_raw --profiles-dir .
-            dbt seed --profiles-dir . 
             dbt run --profiles-dir .
           else
             dbt compile --profiles-dir .

@@ -22,9 +22,9 @@ models:
 
 seeds:
   mydbt:
-    classify_text_labels:
+    mytable_name: # TODO:テーブル名を正しく指定してください。
       +schema: NORMALIZED
       +column_types:
         LABEL: varchar
         DESCRIPTION: varchar
-        SORT_ORDER: integer
+        row3: null # TODO:列を正しく定義してください。
