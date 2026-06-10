@@ -91,6 +91,8 @@ jobs:
           echo "DBT_ENV_SECRET_SCHEMA is set: ${{ env.DBT_ENV_SECRET_SCHEMA != '' }}"
 
           echo "DBT_DATABASE is set: ${{ env.DBT_DATABASE != '' }}"
+
+          echo "DB_NAME=$DB_NAME"
       
       - name: Terraform Output
         working-directory: terraform
@@ -101,6 +103,29 @@ jobs:
           terraform init
           DB_NAME=$(terraform output -raw training_db_name)
           echo "DBT_DATABASE=$DB_NAME" >> $GITHUB_ENV
+
+      - name: Debug variables2
+        run: |
+
+          echo "=== GITHUB_ENV contents ==="
+
+          cat $GITHUB_ENV
+
+          echo "=== Resolved values ==="
+
+          echo "DBT_ENV_SECRET_ACCOUNT is set: ${{ env.DBT_ENV_SECRET_ACCOUNT != '' }}"
+
+          echo "DBT_ENV_SECRET_USER is set: ${{ env.DBT_ENV_SECRET_USER != '' }}"
+
+          echo "DBT_ENV_SECRET_ROLE is set: ${{ env.DBT_ENV_SECRET_ROLE != '' }}"
+
+          echo "DBT_ENV_SECRET_WAREHOUSE is set: ${{ env.DBT_ENV_SECRET_WAREHOUSE != '' }}"
+
+          echo "DBT_ENV_SECRET_SCHEMA is set: ${{ env.DBT_ENV_SECRET_SCHEMA != '' }}"
+
+          echo "DBT_DATABASE is set: ${{ env.DBT_DATABASE != '' }}"
+
+          echo "DB_NAME=$DB_NAME"
 
       - name: Install dbt and Run
         working-directory: ./dbt/mydbt
