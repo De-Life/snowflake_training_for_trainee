@@ -43,7 +43,7 @@ jobs:
   dbt:
     name: dbt
     runs-on: ubuntu-latest
-    environment: # TODO: GitHubの環境名を動的に参照してください
+    environment: ti2140
     needs: terraform
     if: |
       success() ||
