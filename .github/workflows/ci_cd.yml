@@ -14,7 +14,7 @@ jobs:
     environment: ti2140
     env:
       TF_TOKEN_app_terraform_io: ${{ secrets.HCP_API_TOKEN }}
-      TF_WORKSPACE: ${{ vars.TF_WORKSPACE }}
+      TF_WORKSPACE: trainee02-workspace #${{ vars.TF_WORKSPACE }}
 
     steps:
       - name: Checkout
