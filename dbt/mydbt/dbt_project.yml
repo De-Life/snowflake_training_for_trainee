@@ -22,7 +22,7 @@ models:
 
 seeds:
   mydbt:
-    classify_text_label: # TODO:テーブル名を正しく指定してください。
+    classify_text_labels: # TODO:テーブル名を正しく指定してください。
       +schema: NORMALIZED
       +column_types:
         LABEL: varchar
