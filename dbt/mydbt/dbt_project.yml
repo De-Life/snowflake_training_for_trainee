@@ -27,4 +27,4 @@ seeds:
       +column_types:
         LABEL: varchar
         DESCRIPTION: varchar
-        SORT_ORDER: Integer # TODO:列を正しく定義してください。
+        SORT_ORDER: integer # TODO:列を正しく定義してください。
