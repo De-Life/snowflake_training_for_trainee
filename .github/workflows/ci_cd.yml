@@ -71,29 +71,6 @@ jobs:
             "https://app.terraform.io/api/v2/workspaces/${{ vars.HCP_WORKSPACE_ID }}/vars" \
             | python3 src/fetch_tfc_vars.py >> $GITHUB_ENV
 
-      - name: Debug variables
-        run: |
-
-          echo "=== GITHUB_ENV contents ==="
-
-          cat $GITHUB_ENV
-
-          echo "=== Resolved values ==="
-
-          echo "DBT_ENV_SECRET_ACCOUNT is set: ${{ env.DBT_ENV_SECRET_ACCOUNT != '' }}"
-
-          echo "DBT_ENV_SECRET_USER is set: ${{ env.DBT_ENV_SECRET_USER != '' }}"
-
-          echo "DBT_ENV_SECRET_ROLE is set: ${{ env.DBT_ENV_SECRET_ROLE != '' }}"
-
-          echo "DBT_ENV_SECRET_WAREHOUSE is set: ${{ env.DBT_ENV_SECRET_WAREHOUSE != '' }}"
-
-          echo "DBT_ENV_SECRET_SCHEMA is set: ${{ env.DBT_ENV_SECRET_SCHEMA != '' }}"
-
-          echo "DBT_DATABASE is set: ${{ env.DBT_DATABASE != '' }}"
-
-          echo "DB_NAME=$DB_NAME"
-      
       - name: Terraform Output
         working-directory: terraform
         env:
@@ -102,31 +79,7 @@ jobs:
         run: |
           terraform init
           DB_NAME=$(terraform output -raw training_db_name)
-          echo "DB_NAME resolved to: $DB_NAME"
           echo "DBT_DATABASE=$DB_NAME" >> $GITHUB_ENV
-
-      - name: Debug variables2
-        run: |
-
-          echo "=== GITHUB_ENV contents ==="
-
-          cat $GITHUB_ENV
-
-          echo "=== Resolved values ==="
-
-          echo "DBT_ENV_SECRET_ACCOUNT is set: ${{ env.DBT_ENV_SECRET_ACCOUNT != '' }}"
-
-          echo "DBT_ENV_SECRET_USER is set: ${{ env.DBT_ENV_SECRET_USER != '' }}"
-
-          echo "DBT_ENV_SECRET_ROLE is set: ${{ env.DBT_ENV_SECRET_ROLE != '' }}"
-
-          echo "DBT_ENV_SECRET_WAREHOUSE is set: ${{ env.DBT_ENV_SECRET_WAREHOUSE != '' }}"
-
-          echo "DBT_ENV_SECRET_SCHEMA is set: ${{ env.DBT_ENV_SECRET_SCHEMA != '' }}"
-
-          echo "DBT_DATABASE is set: ${{ env.DBT_DATABASE != '' }}"
-
-          echo "DB_NAME=$DB_NAME"
 
       - name: Install dbt and Run
         working-directory: ./dbt/mydbt
@@ -137,6 +90,7 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             dbt debug --profiles-dir . || true
             dbt run-operation load_mails_raw --profiles-dir .
+            dbt seed --profiles-dir . 
             dbt run --profiles-dir .
           else
             dbt compile --profiles-dir .
