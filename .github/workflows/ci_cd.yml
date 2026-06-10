@@ -102,6 +102,7 @@ jobs:
         run: |
           terraform init
           DB_NAME=$(terraform output -raw training_db_name)
+          echo "DB_NAME resolved to: $DB_NAME"
           echo "DBT_DATABASE=$DB_NAME" >> $GITHUB_ENV
 
       - name: Debug variables2
