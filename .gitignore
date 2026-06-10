@@ -13,7 +13,7 @@ terraform/*.tfvars
 *.p8
 *.pem
 *.key
-*.pub
+# *.pub # 公開鍵を含めることとする
 
 # .venvフォルダ
 dbt/.venv/
