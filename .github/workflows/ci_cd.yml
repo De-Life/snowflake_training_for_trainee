@@ -37,7 +37,7 @@ jobs:
 
       - name: Terraform Import
         working-directory: terraform
-        run: terraform import
+        run: terraform import snowflake_storage_integration.s3_int S3_INT
 
       - name: Terraform Apply
         working-directory: terraform
