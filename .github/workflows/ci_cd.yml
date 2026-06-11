@@ -35,10 +35,6 @@ jobs:
         working-directory: terraform
         run: terraform plan
 
-      - name: Terraform Import
-        working-directory: terraform
-        run: terraform import snowflake_storage_integration.s3_int S3_INT
-
       - name: Terraform Apply
         working-directory: terraform
         if: github.event_name == 'workflow_dispatch'
