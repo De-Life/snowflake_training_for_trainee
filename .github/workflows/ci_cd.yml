@@ -35,6 +35,10 @@ jobs:
         working-directory: terraform
         run: terraform plan
 
+      - name: Terraform Import
+        working-directory: terraform
+        run: terraform import
+
       - name: Terraform Apply
         working-directory: terraform
         if: github.event_name == 'workflow_dispatch'
