@@ -39,7 +39,7 @@ variable "snowflake_role_name" {
   type = string
 }
 
-variable "storage_integration_name" {
+variable "snowflake_storage_integration_name" {
   type    = string
   default = "S3_INT"
 }
