@@ -1,17 +1,4 @@
 # ==========================================
-# Storage Integration定義
-# ==========================================
-resource "snowflake_storage_integration" "s3_int" {
-  name                      = "S3_INT"
-  type                      = "EXTERNAL_STAGE"
-  enabled                   = true
-  storage_provider          = "S3"
-  storage_aws_role_arn      = var.snowflake_aws_role_arn
-  storage_allowed_locations = [var.s3_bucket_url]
-  comment                   = "Storage integration for S3 mail data."
-}
-
-# ==========================================
 # File Format定義
 # ==========================================
 resource "snowflake_file_format" "mail_jsonl_format" {
@@ -32,7 +19,7 @@ resource "snowflake_stage" "st_s3_mail" {
   schema              = snowflake_schema.training_raw.name
   name                = "ST_S3_MAIL"
   url                 = var.s3_bucket_url
-  storage_integration = snowflake_storage_integration.s3_int.name
+  storage_integration = var.snowflake_storage_integration_name
   file_format         = "FORMAT_NAME = ${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.${snowflake_file_format.mail_jsonl_format.name}"
   comment             = "External stage for mail data from S3."
 }
@@ -149,7 +136,7 @@ resource "snowflake_grant_privileges_to_account_role" "s3_int_usage" {
   privileges        = ["USAGE"]
   on_account_object {
     object_type = "INTEGRATION"
-    object_name = snowflake_storage_integration.s3_int.name
+    object_name = var.snowflake_storage_integration_name
   }
 }
 
