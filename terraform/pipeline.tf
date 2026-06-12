@@ -1,15 +1,3 @@
-# ==========================================
-# File Format定義
-# ==========================================
-resource "snowflake_file_format" "mail_jsonl_format" {
-  database           = snowflake_database.training_db.name
-  schema             = snowflake_schema.training_raw.name
-  name               = "MAIL_JSONL_FORMAT"
-  format_type        = "JSON"
-  strip_outer_array  = false
-  ignore_utf8_errors = true
-  comment            = "File format for mail JSONL files."
-}
 
 # ==========================================
 # External Stage定義
