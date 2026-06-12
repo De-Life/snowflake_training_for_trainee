@@ -1,9 +1,4 @@
 # ==========================================
-# Storage Integration定義
-# ==========================================
-
-
-# ==========================================
 # File Format定義
 # ==========================================
 resource "snowflake_file_format" "mail_jsonl_format" {
@@ -130,7 +125,7 @@ resource "snowflake_pipe" "pipe_s3_to_mails_raw" {
   auto_ingest = true
   comment     = "Snowpipe for auto-ingesting mail data from S3."
   # TODO：以下の???となっている箇所を補完し、最適なクエリを生成してください。
-  copy_statement = "COPY INTO ${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.${snowflake_table.mails_raw.name} FROM @${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.${snowflake_stage.st_s3_mail.name} MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE"
+  copy_statement = "COPY ??? ${snowflake_database.training_db.name}.${???}.${snowflake_table.mails_raw.name} FROM @${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.${???} MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE"
 }
 
 # ==========================================
@@ -155,10 +150,6 @@ resource "snowflake_grant_privileges_to_account_role" "mails_raw_grants" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "future_table_grants" {
-  for_each = toset([
-    snowflake_schema.training_raw.name,
-    snowflake_schema.training_normalized.name
-  ])
   account_role_name = var.snowflake_role_name
   privileges        = ["SELECT", "INSERT", "UPDATE", "DELETE"]
   on_schema_object {
