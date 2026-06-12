@@ -1,7 +1,9 @@
 # ==========================================
 # Storage Integration定義
 # ==========================================
-
+data "snowflake_storage_integration" "s3_int" {
+  name = "S3_INT"
+}
 
 # ==========================================
 # File Format定義
@@ -24,7 +26,7 @@ resource "snowflake_stage" "st_s3_mail" {
   schema              = snowflake_schema.training_raw.name
   name                = "ST_S3_MAIL"
   url                 = var.s3_bucket_url #"s3://trainee02-bucket/messages/"
-  storage_integration = "S3_INT"
+  storage_integration = snowflake_storage_integration.s3_int.name
   file_format         = "FORMAT_NAME = ${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.${snowflake_file_format.mail_jsonl_format.name}"
   comment             = "External stage for mail data from S3."
 }
@@ -141,7 +143,7 @@ resource "snowflake_grant_privileges_to_account_role" "s3_int_usage" {
   privileges        = ["USAGE"]
   on_account_object {
     object_type = "INTEGRATION"
-    object_name = "S3_INT"
+    object_name = snowflake_storage_integration.s3_int.name
   }
 }
 
