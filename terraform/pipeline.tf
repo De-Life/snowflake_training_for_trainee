@@ -1,3 +1,15 @@
+# ==========================================
+# File Format定義
+# ==========================================
+resource "snowflake_file_format" "mail_jsonl_format" {
+  database           = snowflake_database.training_db.name
+  schema             = snowflake_schema.training_raw.name
+  name               = "MAIL_JSONL_FORMAT"
+  format_type        = "JSON"
+  strip_outer_array  = false
+  ignore_utf8_errors = true
+  comment            = "File format for mail JSONL files."
+}
 
 # ==========================================
 # External Stage定義
@@ -113,7 +125,7 @@ resource "snowflake_pipe" "pipe_s3_to_mails_raw" {
   auto_ingest = true
   comment     = "Snowpipe for auto-ingesting mail data from S3."
   # TODO：以下の???となっている箇所を補完し、最適なクエリを生成してください。
-  copy_statement = "COPY INTO ${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.${snowflake_table.mails_raw.name} FROM @${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.${snowflake_pipe.pipe_s3_to_mails_raw.name} MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE"
+  copy_statement = "COPY INTO ${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.${snowflake_table.mails_raw.name} FROM @${snowflake_database.training_db.name}.${snowflake_schema.training_raw.name}.${snowflake_stage.st_s3_mail.name} MATCH_BY_COLUMN_NAME = CASE_INSENSITIVE"
 }
 
 # ==========================================
