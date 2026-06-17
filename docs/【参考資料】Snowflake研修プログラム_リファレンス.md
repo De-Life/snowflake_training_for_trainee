@@ -120,18 +120,43 @@ git config --global user.name "ユーザー名"
 git config --global user.email "メールアドレス"
 ```
 
-GitHub に登録したものと合わせておくとよい。
+GitHub を使用する場合、Githubの登録情報を入力する。
+(Githubについては後述)
 
 ### 2.4 GitHub リポジトリの作成と初回プッシュ
+以下、Githubを使用する場合を例に説明している。
 
-#### リポジトリの作成
+#### リポジトリとは
+Gitの場合、ファイルや履歴の保管庫。
+Git以外でも使われる用語のため、注意。
+
+実務では、既に作成済みのリポジトリを**クローン**するか(A)、新しくリポジトリを作成するか(B)という流れになる。
+
+#### A. リポジトリのクローン
+既存のリポジトリをまるごとダウンロードすること。
+    
+GitHubの場合。リポジトリページでリポジトリURLをコピー
+![GitHubの場合。リポジトリページでリポジトリURLをコピー](images\media\image10.png)
+
+コピーしたURLをもとに、以下のようにコマンドを実行
+```bash
+# 作業フォルダを作成して移動する
+mkdir cicd-test
+cd cicd-test
+
+# クローン
+git clone リポジトリURL(https://... .git)
+```
+
+
+#### B-1. リポジトリの作成
 
 1. [github.com](https://github.com/) にログインし、右上の「**＋**」から「**New repository**」をクリック。
 2. **Repository name** に任意の名前を入力（例：`cicd-test`）。
-3. Public / Private を選択する。「Add a README file」等の初期化オプションはすべてオフにする。
+3. Public / Private を選択する。(注: Publicは全世界公開となります)
 4. 「**Create repository**」を押し、表示された `https://github.com/...` の URL をコピーしておく。
 
-#### 初回プッシュ
+#### B-2. 初回プッシュ
 
 ```bash
 # 作業フォルダを作成して移動する
