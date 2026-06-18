@@ -371,6 +371,15 @@ git stash pop
 ---
 
 ## 6. Terraform
+Terraform（テラフォーム）とは、クラウドやオンプレミス環境のサーバー・ネットワークなどのインフラ構築を、プログラム（コード）として記述し自動化する「IaC (Infrastructure as Code)」ツールです。
+
+AWS、Google Cloud (GCP)、Microsoft Azureなど、主要なクラウドサービスのリソースをテキストファイルに定義できます。
+
+### HCP Terraformとは
+HashiCorp社による、Terraformを組織で利用するために必要な機能を提供するSaaS製品。
+
+Terraformはオープンソースであり、HashiCorpによってGo言語で開発されました。
+**HashiCorp Configuration Language (HCL)** という独自の言語を使用して設定ファイルを記述します。
 
 ### 6.1 `terraform.tfstate`
 
@@ -415,7 +424,14 @@ Snowflake インフラ
 
 データ変換ロジックは dbt に委ねる。詳細は「[6. dbt](#6-dbt)」を参照。
 
-### 6.4 変数解決の仕組み
+### 6.4 基本的なワークフロー
+Terraformでは、主に以下の3つのステップを繰り返してインフラを管理します。
+
+1. **`terraform init`**: 必要なプラグインや環境を初期化する。
+2. **`terraform plan`**: 構成ファイルと実際の環境の差分を確認し、実行内容をプレビューする。
+3. **`terraform apply`**: 実際にクラウド環境へインフラを構築・変更する。
+
+### 6.5 変数解決の仕組み
 
 #### ファイルの依存関係
 
@@ -443,6 +459,16 @@ HCP Terraform の実行環境において、以下のいずれかの形式で登
 ---
 
 ## 7. dbt
+Data Build Toolの略
+
+データ連携の**ELT**におけるT（データストア内でのデータ変換）の実施をサポートするツール
+
+### ETL と ELT
+
+- **ETL (Extract, Transform, Load)**: データをロードする前に、外部の処理エンジンで変換（加工・クレンジング）を行います。
+- **ELT (Extract, Load, Transform)**: データを先に Snowflake へロードし、その後で Snowflake の強力な計算リソース（仮想ウェアハウス）を使用して変換を行います
+
+従来のデータ処理では ETL が主流でしたが、Snowflake のようなクラウドデータプラットフォームでは ELT が推奨されることが多い。
 
 ### 7.1 dbt が管理するオブジェクト
 
