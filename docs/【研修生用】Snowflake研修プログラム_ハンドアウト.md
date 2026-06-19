@@ -307,7 +307,7 @@ sequenceDiagram
 
 ### ＜手順概要＞
 
-- [こちら](..\src\drawIO_guideline_v2.1.json)から、構成図ガイドライン（.json）をダウンロードします。
+- [こちら](../src/drawIO_guideline_v2.1.json)から、構成図ガイドライン（.json）をダウンロードします。
 
 - AIに構成図用XMLを出力させます。その際、ガイドライン(.json)を添付し、それに沿うように指示します。
 
