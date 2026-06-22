@@ -65,16 +65,16 @@ Git以外でも登場する単語である
     ```
     
     クローン時に入力するリポジトリURLは、各Gitサービスで取得できる。
-    ![GitHubの場合。リポジトリページでリポジトリURLをコピー](images\image1.png)
+    <img src="images/image1.png" width="70%">
 
 ### ちなみに：リポジトリを作成するとき
 
 **Publicのままだと全世界公開となります**。Privateにしましょう
-![alt text](images\image3.png)
+<img src="images/image3.png" width="50%">
 
 ### **よく使うGit操作**
 
-![image.png](images\image2.png)
+<img src="images/image2.png" width="70%">
 
 - **クローン**：既存のリポジトリをまるごとダウンロード
     
