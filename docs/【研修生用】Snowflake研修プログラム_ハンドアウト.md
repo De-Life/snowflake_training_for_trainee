@@ -1,7 +1,7 @@
 <div style="text-align:center;">
 <p>【研修生用】</p>
 <h1>Snowflake研修プログラム_ハンドアウト</h1>
-<p>最終更新：2026/6/3</p>
+<p>最終更新：2026/6/23</p>
 </div>
 
 <br>
