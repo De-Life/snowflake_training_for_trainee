@@ -9,7 +9,7 @@ resource "snowflake_schema" "training_raw" {
 
 resource "snowflake_schema" "training_normalized" {
   database = snowflake_database.training_db.name
-  name     = "NORMARIZED"
+  name     = "NORMALIZED"
   comment  = "Processed data for Streamlit."
 }
 
